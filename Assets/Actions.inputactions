@@ -15,6 +15,26 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "Commencer",
+                    "type": "Button",
+                    "id": "dca8f630-7b84-426e-a0de-fbebfea0699c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Acceleration",
+                    "type": "Button",
+                    "id": "aef79dfa-7107-45a9-b5d6-87330b97dd34",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -50,6 +70,28 @@
                     "action": "Diriger",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "776cc030-a22b-4a72-a1b4-f24782f1cbe3",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Commencer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5249d174-8ba8-43b8-b4b2-4ea7893a7b46",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Acceleration",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

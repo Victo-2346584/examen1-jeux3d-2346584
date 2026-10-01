@@ -25,9 +25,24 @@ public class Boule : MonoBehaviour
     /// </summary>
     public Vector3 Velocite => rigidbody.linearVelocity;
 
+    private bool jeuCommencer;
+    private bool accelerationCours;
+
     private void Start()
     {
+        jeuCommencer = false; 
+        accelerationCours=false;
         rigidbody = GetComponent<Rigidbody>();
+
+        if (ControleurJeu.Instance == null)
+            return;
+
+        PlayerInput controles = ControleurJeu.Instance.Controles;
+        controles.actions.FindAction("Commencer").performed += CommencerJeu;
+        controles.actions.FindAction("Acceleration").performed += UtiliserAcceleration;
+
+        controles.actions.FindAction("Diriger").performed += CommencerDirection;
+        controles.actions.FindAction("Diriger").canceled += ArreterDirection;
     }
 
     private void OnDestroy()
@@ -39,9 +54,11 @@ public class Boule : MonoBehaviour
 
         if (controles == null) 
             return;
-
         controles.actions.FindAction("Diriger").performed -= CommencerDirection;
         controles.actions.FindAction("Diriger").canceled -= ArreterDirection;
+
+        controles.actions.FindAction("Commencer").performed -= CommencerJeu;
+
     }
 
     private void Update()
@@ -56,9 +73,46 @@ public class Boule : MonoBehaviour
     {
         Diriger();
     }
+    private void CommencerJeu(InputAction.CallbackContext contexte)
+    {
+        rigidbody.useGravity = true;
+        jeuCommencer = true;
+        PlayerInput controles = ControleurJeu.Instance.Controles;
+        controles.actions.FindAction("Commencer").Disable();
+    }
+    private void UtiliserAcceleration(InputAction.CallbackContext contexte)
+    {
+        if (!jeuCommencer) 
+        {
+            return;
+        }     
+        if (ControleurJeu.Instance.NombreCharges > 0)
+        {
+            ControleurJeu.Instance.DecrementerCharge();
+            PlayerInput controles = ControleurJeu.Instance.Controles;
+            controles.actions.FindAction("Acceleration").Disable();
+            StartCoroutine(Charge());
+        }
+        
+    }
+    private IEnumerator Charge()
+    {
+        accelerationCours = true;
+        while (accelerationCours)
+        {
+            forceAppliquee.z = 15; 
+            yield return new WaitForSeconds(1);
+            forceAppliquee.z = 0;
+            PlayerInput controle = ControleurJeu.Instance.Controles;
+            controle.actions.FindAction("Acceleration").Enable();
+            accelerationCours = false;
 
+        }
+        
+    }
     private void CommencerDirection(InputAction.CallbackContext contexte)
     {
+        if (jeuCommencer)
         forceAppliquee += contexte.ReadValue<float>() * forceDeplacement * Vector3.right;
     }
 
